@@ -1,5 +1,6 @@
 # Avyah Sharma
 # Automatically moves beatmaps 
+# 12/3/2018
 
 import shutil
 import os
@@ -16,9 +17,20 @@ def get_download_path():
         return os.path.join(os.path.expanduser('~'), 'downloads')
 
 def get_songs_path():
-    tarDir = os.path.abspath("osu!.exe")
-    tarDir.replace("osu!.exe", "Songs")
-    return tarDir
+	cwd = os.getcwd()
+	osu_dir = ""
+
+	if cwd.replace("\\", "/").split("/")[1] == "Users":
+		if os.path.exists("C:/Users/"+cwd.replace("\\", "/").split("/")[2]+"/AppData/Local/osu!"):
+			osu_dir = "C:/Users/" + cwd.replace("\\", "/").split("/")[2] + "/AppData/Local/osu!"
+			tarDir = osu_dir
+			return tarDir
+
+		if osu_dir == "":
+			print("osu! song directory not found. Please input it manually.")
+			osu_dir = input(":").replace("\\", "/").rstrip("/")
+			tarDir = osu_dir
+			return tarDir
 
 srcDir = get_download_path()
 tarDir = get_songs_path()
@@ -26,4 +38,3 @@ tarDir = get_songs_path()
 for file in os.listdir(srcDir):
     if file.endswith(".osz"):
         shutil.move(srcDir, tarDir)
-
